@@ -1,4 +1,4 @@
-#the best sql parser implement in golang
+#The Best SQL Parser implement in golang
 =============
 
 you can use this module independently
