@@ -3,7 +3,7 @@ package ast_test
 import (
 	"testing"
 
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/ast"
 	"github.com/ruiaylin/sqlparser/parser"
 )

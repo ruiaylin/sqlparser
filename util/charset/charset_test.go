@@ -16,8 +16,8 @@ package charset
 import (
 	"testing"
 
-	. "github.com/pingcap/check"
-	"github.com/pingcap/tidb/util/testleak"
+	. "github.com/ruiaylin/check"
+	"github.com/ruiaylin/sqlparser/util/testleak"
 )
 
 func TestT(t *testing.T) {

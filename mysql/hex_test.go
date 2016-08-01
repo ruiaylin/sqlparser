@@ -16,7 +16,7 @@ package mysql
 import (
 	"strconv"
 
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/util/testleak"
 )
 

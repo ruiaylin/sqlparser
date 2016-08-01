@@ -14,7 +14,7 @@
 package mysql
 
 import (
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/util/testleak"
 )
 

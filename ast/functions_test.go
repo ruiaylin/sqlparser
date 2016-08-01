@@ -1,7 +1,7 @@
 package ast
 
 import (
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/model"
 	"github.com/ruiaylin/sqlparser/mysql"
 	"github.com/ruiaylin/sqlparser/util/types"

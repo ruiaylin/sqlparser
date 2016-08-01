@@ -16,7 +16,7 @@ package mock
 import (
 	"testing"
 
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/util/testleak"
 )
 

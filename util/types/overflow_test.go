@@ -16,7 +16,7 @@ package types
 import (
 	"math"
 
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/util/testleak"
 )
 

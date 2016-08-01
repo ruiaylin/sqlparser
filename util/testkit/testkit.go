@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	"github.com/juju/errors"
-	"github.com/pingcap/check"
+	"github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser"
 	"github.com/ruiaylin/sqlparser/ast"
 	"github.com/ruiaylin/sqlparser/kv"

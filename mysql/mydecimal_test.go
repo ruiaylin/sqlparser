@@ -14,7 +14,7 @@
 package mysql
 
 import (
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 )
 
 var _ = Suite(&testMyDecimalSuite{})

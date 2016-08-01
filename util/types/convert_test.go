@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/juju/errors"
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/mysql"
 	"github.com/ruiaylin/sqlparser/util/charset"
 	"github.com/ruiaylin/sqlparser/util/testleak"

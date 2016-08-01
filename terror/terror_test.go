@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"github.com/juju/errors"
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/parser"
 	"github.com/ruiaylin/sqlparser/util/testleak"
 )

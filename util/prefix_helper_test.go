@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"testing"
 
-	. "github.com/pingcap/check"
+	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/kv"
 	"github.com/ruiaylin/sqlparser/store/localstore"
 	"github.com/ruiaylin/sqlparser/store/localstore/goleveldb"
