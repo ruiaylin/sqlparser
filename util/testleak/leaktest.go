@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ruiaylin/check"
+	"github.com/pingcap/check"
 )
 
 func interestingGoroutines() (gs []string) {
