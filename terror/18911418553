@@ -1,0 +1,10 @@
+18911418553
+
+select id , name , current_slice , current_slice_time, modify,schedule_type  from sql_task_info where id in ( 3002 ,3003,3046, 5071, 5072, 5073) ; 
+
+
+update sql_task_info set schedule_type = 'async-minute'
+
+select id , name , sql_task_id , slice_seq, slice_time,execute_flag ,schedule_type from sql_slice_schedule  where id in ( 3002 ,3003,3046, 5071, 5072, 5073) ; 
+
+
