@@ -1,7 +1,9 @@
-#The Best MySQL's SQL Parser implement in golang
-=============
+The Best MySQL's SQL Parser implement in golang
+===============================================
 
-you can use this module independently
+### This parser is part of TiDB from PingCap
+
+You can use this module independently
 
 Install the package with:
 
