@@ -1,4 +1,4 @@
-#The Best SQL Parser implement in golang
+#The Best MySQL's SQL Parser implement in golang
 =============
 
 you can use this module independently
