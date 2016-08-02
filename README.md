@@ -1,4 +1,4 @@
-The Best MySQL's SQL Parser implement in golang
+The most full-featured MySQL's SQL Parser implement in golang at present. 
 ===============================================
 
 ### This parser is part of TiDB from PingCap
