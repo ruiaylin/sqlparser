@@ -28,6 +28,8 @@ golex:
 	$(GO) get github.com/qiuyesuifeng/golex
 
 goyacc:
+	cd parser/goyacc
+	$(GO) get
 	$(GO) install github.com/ruiaylin/sqlparser/parser/goyacc
 
 
