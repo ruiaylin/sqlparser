@@ -28,10 +28,11 @@ golex:
 	$(GO) get github.com/qiuyesuifeng/golex
 
 goyacc:
-	cd parser/goyacc
-	$(GO) get
+	$(GO) get github.com/ruiaylin/sqlparser/parser/goyacc 
 	$(GO) install github.com/ruiaylin/sqlparser/parser/goyacc
 
+packges:
+	$(GO) get github.com/ruiaylin/sqlparser/util/charset
 
 TEMP_FILE = temp_parser_file
 
