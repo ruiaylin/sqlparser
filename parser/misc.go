@@ -15,6 +15,7 @@ package parser
 
 import (
 	"bytes"
+
 	"github.com/ruiaylin/sqlparser/util/hack"
 )
 

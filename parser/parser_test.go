@@ -1049,6 +1049,7 @@ var tableCompatible = []string{
 
 func (s *testParserSuite) TestParserCompatible(c *C) {
 	defer testleak.AfterTest(c)()
+<<<<<<< HEAD
 	saveUseNewLexer := UseNewLexer
 
 	parser := New()
@@ -1058,6 +1059,17 @@ func (s *testParserSuite) TestParserCompatible(c *C) {
 		UseNewLexer = true
 		st2, err2 := parser.Parse(str, "", "")
 		UseNewLexer = false
+=======
+	saveUseNewLexer := parser.UseNewLexer
+
+	parser := parser.New()
+	for _, str := range tableCompatible {
+		st1, err1 := parser.Parse(str, "", "")
+
+		parser.UseNewLexer = true
+		st2, err2 := parser.Parse(str, "", "")
+		parser.UseNewLexer = false
+>>>>>>> 042a41fd4830a6b0b7e11bc068f7f4c4a6dff377
 
 		c.Assert(err1, IsNil)
 		c.Assert(err2, IsNil)
@@ -1070,5 +1082,9 @@ func (s *testParserSuite) TestParserCompatible(c *C) {
 		}
 	}
 
+<<<<<<< HEAD
 	UseNewLexer = saveUseNewLexer
+=======
+	parser.UseNewLexer = saveUseNewLexer
+>>>>>>> 042a41fd4830a6b0b7e11bc068f7f4c4a6dff377
 }
