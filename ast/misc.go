@@ -16,10 +16,10 @@ package ast
 import (
 	"fmt"
 
-	// "github.com/ruiaylin/sqlparser/context"
+	// --- "github.com/ruiaylin/sqlparser/context"
 	"github.com/ruiaylin/sqlparser/model"
 	"github.com/ruiaylin/sqlparser/mysql"
-	// "github.com/ruiaylin/sqlparser/sessionctx/db"
+	// --- "github.com/ruiaylin/sqlparser/sessionctx/db"
 )
 
 var (
@@ -520,15 +520,15 @@ type Ident struct {
 }
 
 // Full returns an Ident which set schema to the current schema if it is empty.
-// func (i Ident) Full(ctx context.Context) (full Ident) {
-// 	full.Name = i.Name
-// 	if i.Schema.O != "" {
-// 		full.Schema = i.Schema
-// 	} else {
-// 		full.Schema = model.NewCIStr(db.GetCurrentSchema(ctx))
-// 	}
-// 	return
-// }
+//  --- func (i Ident) Full(ctx context.Context) (full Ident) {
+//  --- 	full.Name = i.Name
+//  --- 	if i.Schema.O != "" {
+//  --- 		full.Schema = i.Schema
+//  --- 	} else {
+//  --- 		full.Schema = model.NewCIStr(db.GetCurrentSchema(ctx))
+//  --- 	}
+//  --- 	return
+//  --- }
 
 // String implements fmt.Stringer interface
 func (i Ident) String() string {

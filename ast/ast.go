@@ -16,6 +16,7 @@
 package ast
 
 import (
+	// --- "github.com/ruiaylin/sqlparser/context"
 	"github.com/ruiaylin/sqlparser/model"
 	"github.com/ruiaylin/sqlparser/util/types"
 )
@@ -162,6 +163,7 @@ type ResultSetNode interface {
 // they must be held out of the implementing instance.
 type Statement interface {
 	// Explain gets the execution plans.
+	//Explain(ctx context.Context, w format.Formatter)
 
 	// IsDDL shows whether the statement is an DDL operation.
 	IsDDL() bool
@@ -173,7 +175,7 @@ type Statement interface {
 	SetText(text string)
 
 	// Exec executes SQL and gets a Recordset.
-	// Exec(ctx context.Context) (RecordSet, error)
+	// --- Exec(ctx context.Context) (RecordSet, error)
 }
 
 // Visitor visits a Node.
