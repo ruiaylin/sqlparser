@@ -14,10 +14,11 @@
 package types
 
 import (
+	"time"
+
 	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/mysql"
 	"github.com/ruiaylin/sqlparser/util/testleak"
-	"time"
 )
 
 var _ = Suite(&testCompareSuite{})

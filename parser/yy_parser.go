@@ -14,7 +14,9 @@
 package parser
 
 import (
+	"math"
 	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -23,6 +25,9 @@ import (
 	"github.com/ruiaylin/sqlparser/mysql"
 	"github.com/ruiaylin/sqlparser/terror"
 )
+
+// UseNewLexer provides a switch for the tidb-server binary.
+var UseNewLexer bool = true
 
 // Error instances.
 var (
@@ -64,8 +69,17 @@ type Parser struct {
 	charset   string
 	collation string
 	result    []ast.StmtNode
-	cache     []yySymType
 	src       string
+	lexer     Scanner
+
+	// the following fields are used by yyParse to reduce allocation.
+	cache  []yySymType
+	yylval yySymType
+	yyVAL  yySymType
+}
+
+type stmtTexter interface {
+	stmtText() string
 }
 
 // New returns a Parser object.
@@ -90,9 +104,16 @@ func (parser *Parser) Parse(sql, charset, collation string) ([]ast.StmtNode, err
 	parser.result = parser.result[:0]
 
 	sql = handleMySQLSpecificCode(sql)
-	l := NewLexer(sql)
 
+	var l yyLexer
+	if UseNewLexer {
+		parser.lexer.reset(sql)
+		l = &parser.lexer
+	} else {
+		l = NewLexer(sql)
+	}
 	yyParse(l, parser)
+
 	if len(l.Errors()) != 0 {
 		return nil, errors.Trace(l.Errors()[0])
 	}
@@ -122,18 +143,82 @@ func (parser *Parser) setLastSelectFieldText(st *ast.SelectStmt, lastEnd int) {
 	}
 }
 
-func (parser *Parser) startOffset(offset int) int {
-	offset--
-	for unicode.IsSpace(rune(parser.src[offset])) {
-		offset++
+func (parser *Parser) startOffset(v *yySymType) int {
+	if !UseNewLexer {
+		offset := v.offset
+		offset--
+		for unicode.IsSpace(rune(parser.src[offset])) {
+			offset++
+		}
+		return offset
 	}
-	return offset
+
+	return v.offset
 }
 
-func (parser *Parser) endOffset(offset int) int {
-	offset--
+func (parser *Parser) endOffset(v *yySymType) int {
+	offset := v.offset
+	if !UseNewLexer {
+		offset--
+	}
+
 	for offset > 0 && unicode.IsSpace(rune(parser.src[offset-1])) {
 		offset--
 	}
 	return offset
+}
+
+func toInt(l yyLexer, lval *yySymType, str string) int {
+	n, err := strconv.ParseUint(str, 0, 64)
+	if err != nil {
+		l.Errorf("integer literal: %v", err)
+		return int(unicode.ReplacementChar)
+	}
+
+	switch {
+	case n < math.MaxInt64:
+		lval.item = int64(n)
+	default:
+		lval.item = uint64(n)
+	}
+	return intLit
+}
+
+func toFloat(l yyLexer, lval *yySymType, str string) int {
+	n, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		l.Errorf("float literal: %v", err)
+		return int(unicode.ReplacementChar)
+	}
+
+	lval.item = float64(n)
+	return floatLit
+}
+
+// See https://dev.mysql.com/doc/refman/5.7/en/hexadecimal-literals.html
+func toHex(l yyLexer, lval *yySymType, str string) int {
+	h, err := mysql.ParseHex(str)
+	if err != nil {
+		// If parse hexadecimal literal to numerical value error, we should treat it as a string.
+		hexStr, err1 := mysql.ParseHexStr(str)
+		if err1 != nil {
+			l.Errorf("hex literal: %v", err)
+			return int(unicode.ReplacementChar)
+		}
+		lval.item = hexStr
+		return stringLit
+	}
+	lval.item = h
+	return hexLit
+}
+
+// See https://dev.mysql.com/doc/refman/5.7/en/bit-type.html
+func toBit(l yyLexer, lval *yySymType, str string) int {
+	b, err := mysql.ParseBit(str, -1)
+	if err != nil {
+		l.Errorf("bit literal: %v", err)
+		return int(unicode.ReplacementChar)
+	}
+	lval.item = b
+	return bitLit
 }

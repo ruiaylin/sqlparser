@@ -14,9 +14,10 @@
 package types
 
 import (
+	"math"
+
 	"github.com/juju/errors"
 	"github.com/ruiaylin/sqlparser/mysql"
-	"math"
 )
 
 // RoundFloat rounds float val to the nearest integer value with float64 format, like MySQL Round function.

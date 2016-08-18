@@ -14,9 +14,10 @@
 package types
 
 import (
+	"math"
+
 	"github.com/juju/errors"
 	"github.com/ruiaylin/sqlparser/parser/opcode"
-	"math"
 )
 
 // CoerceArithmetic converts datum to appropriate datum for arithmetic computing.
