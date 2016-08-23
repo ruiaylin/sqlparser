@@ -17,8 +17,8 @@ import (
 	"fmt"
 
 	// --- "github.com/ruiaylin/sqlparser/context"
-	"github.com/ruiaylin/sqlparser/model"
-	"github.com/ruiaylin/sqlparser/mysql"
+	"github.com/ruiaylin/sqlparser/dependency/model"
+	"github.com/ruiaylin/sqlparser/dependency/mysql"
 	// --- "github.com/ruiaylin/sqlparser/sessionctx/db"
 )
 

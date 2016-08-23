@@ -17,9 +17,9 @@ import (
 	"regexp"
 
 	// --- "github.com/ruiaylin/sqlparser/context"
-	"github.com/ruiaylin/sqlparser/model"
+	"github.com/ruiaylin/sqlparser/dependency/model"
+	"github.com/ruiaylin/sqlparser/dependency/util/types"
 	"github.com/ruiaylin/sqlparser/parser/opcode"
-	"github.com/ruiaylin/sqlparser/util/types"
 )
 
 var (

@@ -15,7 +15,7 @@ package ast
 
 import (
 	"fmt"
-	"github.com/ruiaylin/sqlparser/util/types"
+	"github.com/ruiaylin/sqlparser/dependency/util/types"
 )
 
 // ToString converts a node to a string for debugging purpose.

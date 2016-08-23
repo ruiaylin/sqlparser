@@ -14,8 +14,8 @@
 package ast
 
 import (
-	"github.com/ruiaylin/sqlparser/model"
-	"github.com/ruiaylin/sqlparser/util/types"
+	"github.com/ruiaylin/sqlparser/dependency/model"
+	"github.com/ruiaylin/sqlparser/dependency/util/types"
 )
 
 var (

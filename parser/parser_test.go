@@ -22,8 +22,7 @@ import (
 
 	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/ast"
-	. "github.com/ruiaylin/sqlparser/parser"
-	"github.com/ruiaylin/sqlparser/util/testleak"
+	"github.com/ruiaylin/sqlparser/dependency/util/testleak"
 )
 
 func TestT(t *testing.T) {

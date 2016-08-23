@@ -13,7 +13,7 @@
 
 package ast
 
-import "github.com/ruiaylin/sqlparser/util/types"
+import "github.com/ruiaylin/sqlparser/dependency/util/types"
 
 // node is the struct implements node interface except for Accept method.
 // Node implementations should embed it in.

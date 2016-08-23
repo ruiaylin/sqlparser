@@ -24,8 +24,8 @@ import (
 	"unicode"
 
 	"github.com/ruiaylin/sqlparser/ast"
-	"github.com/ruiaylin/sqlparser/util/charset"
-	"github.com/ruiaylin/sqlparser/util/stringutil"
+	"github.com/ruiaylin/sqlparser/dependency/util/charset"
+	"github.com/ruiaylin/sqlparser/dependency/util/stringutil"
 )
 
 type lexer struct {

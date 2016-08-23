@@ -17,8 +17,8 @@ package ast
 
 import (
 	// --- "github.com/ruiaylin/sqlparser/context"
-	"github.com/ruiaylin/sqlparser/model"
-	"github.com/ruiaylin/sqlparser/util/types"
+	"github.com/ruiaylin/sqlparser/dependency/model"
+	"github.com/ruiaylin/sqlparser/dependency/util/types"
 )
 
 // Node is the basic element of the AST.

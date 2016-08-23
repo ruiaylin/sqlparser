@@ -14,7 +14,7 @@
 package ast
 
 import (
-	"github.com/ruiaylin/sqlparser/model"
+	"github.com/ruiaylin/sqlparser/dependency/model"
 )
 
 var (

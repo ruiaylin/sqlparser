@@ -28,12 +28,12 @@ package parser
 import (
 	"strings"
 
-	"github.com/ruiaylin/sqlparser/mysql"
+	"github.com/ruiaylin/sqlparser/dependency/mysql"
 	"github.com/ruiaylin/sqlparser/ast"
-	"github.com/ruiaylin/sqlparser/model"
+	"github.com/ruiaylin/sqlparser/dependency/model"
 	"github.com/ruiaylin/sqlparser/parser/opcode"
-	"github.com/ruiaylin/sqlparser/util/charset"
-	"github.com/ruiaylin/sqlparser/util/types"
+	"github.com/ruiaylin/sqlparser/dependency/util/charset"
+	"github.com/ruiaylin/sqlparser/dependency/util/types"
 )
 
 %}

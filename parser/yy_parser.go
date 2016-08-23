@@ -22,8 +22,8 @@ import (
 
 	"github.com/juju/errors"
 	"github.com/ruiaylin/sqlparser/ast"
-	"github.com/ruiaylin/sqlparser/mysql"
-	"github.com/ruiaylin/sqlparser/terror"
+	"github.com/ruiaylin/sqlparser/dependency/mysql"
+	"github.com/ruiaylin/sqlparser/dependency/terror"
 )
 
 // UseNewLexer provides a switch for the tidb-server binary.

@@ -17,7 +17,7 @@ import (
 	"fmt"
 
 	. "github.com/ruiaylin/check"
-	"github.com/ruiaylin/sqlparser/util/testleak"
+	"github.com/ruiaylin/sqlparser/dependency/util/testleak"
 )
 
 var _ = Suite(&testLexerSuite{})

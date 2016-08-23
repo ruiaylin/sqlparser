@@ -16,7 +16,7 @@ package parser
 import (
 	"bytes"
 
-	"github.com/ruiaylin/sqlparser/util/hack"
+	"github.com/ruiaylin/sqlparser/dependency/util/hack"
 )
 
 func isWhitespace(ch rune) bool {
