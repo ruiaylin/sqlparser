@@ -16,7 +16,6 @@
 package ast
 
 import (
-	// --- "github.com/ruiaylin/sqlparser/context"
 	"github.com/ruiaylin/sqlparser/dependency/model"
 	"github.com/ruiaylin/sqlparser/dependency/util/types"
 )
@@ -175,7 +174,7 @@ type Statement interface {
 	SetText(text string)
 
 	// Exec executes SQL and gets a Recordset.
-	// --- Exec(ctx context.Context) (RecordSet, error)
+	// Exec(ctx context.Context) (RecordSet, error)
 }
 
 // Visitor visits a Node.

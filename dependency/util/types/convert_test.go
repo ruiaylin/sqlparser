@@ -20,8 +20,8 @@ import (
 
 	"github.com/juju/errors"
 	. "github.com/ruiaylin/check"
+	"github.com/ruiaylin/sqlparser/dependency/mysql" 
 	"github.com/ruiaylin/sqlparser/dependency/mysql"
-	"github.com/ruiaylin/sqlparser/dependency/util/charset"
 	"github.com/ruiaylin/sqlparser/dependency/util/testleak"
 )
 
@@ -201,7 +201,7 @@ func (s *testTypeConvertSuite) TestConvertType(c *C) {
 	ft.Decimal = 5
 	v, err = Convert(3.1415926, ft)
 	c.Assert(err, IsNil)
-	c.Assert(v.(mysql.Decimal).String(), Equals, "3.14159")
+	c.Assert(v.(*mysql.MyDecimal).String(), Equals, "3.14159")
 
 	// For TypeYear
 	ft = NewFieldType(mysql.TypeYear)
@@ -508,14 +508,17 @@ func (s *testTypeConvertSuite) TestConvert(c *C) {
 	signedAccept(c, mysql.TypeNewDecimal, float32(123), "123")
 	signedAccept(c, mysql.TypeNewDecimal, 123.456, "123.456")
 	signedAccept(c, mysql.TypeNewDecimal, "-123.456", "-123.456")
-	signedAccept(c, mysql.TypeNewDecimal, mysql.NewDecimalFromInt(123, 5), "12300000")
-	signedAccept(c, mysql.TypeNewDecimal, mysql.NewDecimalFromInt(-123, -5), "-0.00123")
+	signedAccept(c, mysql.TypeNewDecimal, mysql.NewDecFromInt(12300000), "12300000")
+	dec := mysql.NewDecFromInt(-123)
+	dec.Shift(-5)
+	dec.Round(dec, 5)
+	signedAccept(c, mysql.TypeNewDecimal, dec, "-0.00123")
 }
 
 func (s *testTypeConvertSuite) TestGetValidFloat(c *C) {
 	cases := []struct {
-		orgin string
-		valid string
+		origin string
+		valid  string
 	}{
 		{"-100", "-100"},
 		{"1abc", "1"},
@@ -527,6 +530,6 @@ func (s *testTypeConvertSuite) TestGetValidFloat(c *C) {
 		{"1.1e-13a", "1.1e-13"},
 	}
 	for _, ca := range cases {
-		c.Assert(getValidFloatPrefix(ca.orgin), Equals, ca.valid)
+		c.Assert(getValidFloatPrefix(ca.origin), Equals, ca.valid)
 	}
 }

@@ -15,7 +15,6 @@ package distinct
 
 import (
 	"testing"
-
 	"github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/dependency/util/testleak"
 )

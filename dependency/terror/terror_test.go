@@ -14,13 +14,13 @@
 package terror
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 
 	"github.com/juju/errors"
 	. "github.com/ruiaylin/check"
 	"github.com/ruiaylin/sqlparser/dependency/util/testleak"
-	"github.com/ruiaylin/sqlparser/parser"
 )
 
 func TestT(t *testing.T) {
@@ -65,6 +65,21 @@ func (s *testTErrorSuite) TestTError(c *C) {
 	sqlErr := e.ToSQLError()
 	c.Assert(sqlErr.Message, Equals, "Duplicate entry '1' for key 'PRIMARY'")
 	c.Assert(sqlErr.Code, Equals, uint16(1062))
+}
+
+func (s *testTErrorSuite) TestJson(c *C) {
+	prevTErr := &Error{
+		class:   ClassTable,
+		code:    CodeExecResultIsEmpty,
+		message: "json test",
+	}
+	buf, err := json.Marshal(prevTErr)
+	c.Assert(err, IsNil)
+	var curTErr Error
+	err = json.Unmarshal(buf, &curTErr)
+	c.Assert(err, IsNil)
+	isEqual := prevTErr.Equal(&curTErr)
+	c.Assert(isEqual, IsTrue)
 }
 
 var predefinedErr = ClassExecutor.New(ErrCode(123), "predefiend error")

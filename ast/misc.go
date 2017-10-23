@@ -16,10 +16,8 @@ package ast
 import (
 	"fmt"
 
-	// --- "github.com/ruiaylin/sqlparser/context"
 	"github.com/ruiaylin/sqlparser/dependency/model"
 	"github.com/ruiaylin/sqlparser/dependency/mysql"
-	// --- "github.com/ruiaylin/sqlparser/sessionctx/db"
 )
 
 var (
@@ -39,6 +37,7 @@ var (
 	_ StmtNode = &SetStmt{}
 	_ StmtNode = &UseStmt{}
 	_ StmtNode = &AnalyzeTableStmt{}
+	_ StmtNode = &FlushTableStmt{}
 
 	_ Node = &PrivElem{}
 	_ Node = &VariableAssignment{}
@@ -281,6 +280,26 @@ func (n *VariableAssignment) Accept(v Visitor) (Node, bool) {
 	return v.Leave(n)
 }
 
+// FlushTableStmt is the statement to flush table.
+// if Tables is empty, it means flush all tables.
+type FlushTableStmt struct {
+	stmtNode
+
+	Tables          []*TableName
+	NoWriteToBinLog bool
+	ReadLock        bool
+}
+
+// Accept implements Node Accept interface.
+func (n *FlushTableStmt) Accept(v Visitor) (Node, bool) {
+	newNode, skipChildren := v.Enter(n)
+	if skipChildren {
+		return v.Leave(newNode)
+	}
+	n = newNode.(*FlushTableStmt)
+	return v.Leave(n)
+}
+
 // SetStmt is the statement to set variables.
 type SetStmt struct {
 	stmtNode
@@ -520,15 +539,15 @@ type Ident struct {
 }
 
 // Full returns an Ident which set schema to the current schema if it is empty.
-//  --- func (i Ident) Full(ctx context.Context) (full Ident) {
-//  --- 	full.Name = i.Name
-//  --- 	if i.Schema.O != "" {
-//  --- 		full.Schema = i.Schema
-//  --- 	} else {
-//  --- 		full.Schema = model.NewCIStr(db.GetCurrentSchema(ctx))
-//  --- 	}
-//  --- 	return
-//  --- }
+// func (i Ident) Full(ctx context.Context) (full Ident) {
+// 	full.Name = i.Name
+// 	if i.Schema.O != "" {
+// 		full.Schema = i.Schema
+// 	} else {
+// 		full.Schema = model.NewCIStr(db.GetCurrentSchema(ctx))
+// 		}
+// 		return
+// }
 
 // String implements fmt.Stringer interface
 func (i Ident) String() string {

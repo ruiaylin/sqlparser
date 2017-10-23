@@ -15,13 +15,11 @@ package parser
 
 import (
 	"bytes"
+	"strings"
 
+	"github.com/ruiaylin/sqlparser/dependency/util/charset"
 	"github.com/ruiaylin/sqlparser/dependency/util/hack"
 )
-
-func isWhitespace(ch rune) bool {
-	return ch == ' ' || ch == '\t' || ch == '\n'
-}
 
 func isLetter(ch rune) bool {
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
@@ -156,6 +154,8 @@ var tokenMap = map[string]int{
 	"BYTE":                byteType,
 	"CASE":                caseKwd,
 	"CAST":                cast,
+	"CEIL":                ceil,
+	"CEILING":             ceiling,
 	"CHARACTER":           character,
 	"CHARSET":             charsetKwd,
 	"CHECK":               check,
@@ -176,6 +176,7 @@ var tokenMap = map[string]int{
 	"CONNECTION":          connection,
 	"CONNECTION_ID":       connectionID,
 	"CONSTRAINT":          constraint,
+	"CONSISTENT":          consistent,
 	"CONVERT":             convert,
 	"COUNT":               count,
 	"CREATE":              create,
@@ -186,6 +187,7 @@ var tokenMap = map[string]int{
 	"CURTIME":             curTime,
 	"CURRENT_TIME":        currentTime,
 	"CURRENT_USER":        currentUser,
+	"DATA":                data,
 	"DATABASE":            database,
 	"DATABASES":           databases,
 	"DATE_ADD":            dateAdd,
@@ -214,11 +216,13 @@ var tokenMap = map[string]int{
 	"DYNAMIC":             dynamic,
 	"ELSE":                elseKwd,
 	"ENABLE":              enable,
+	"ENCLOSED":            enclosed,
 	"END":                 end,
 	"ENGINE":              engine,
 	"ENGINES":             engines,
 	"ENUM":                enum,
 	"ESCAPE":              escape,
+	"ESCAPED":             escaped,
 	"EXECUTE":             execute,
 	"EXISTS":              exists,
 	"EXPLAIN":             explain,
@@ -234,6 +238,8 @@ var tokenMap = map[string]int{
 	"FROM":                from,
 	"FULL":                full,
 	"FULLTEXT":            fulltext,
+	"FUNCTION":            function,
+	"FLUSH":               flush,
 	"GET_LOCK":            getLock,
 	"GLOBAL":              global,
 	"GRANT":               grant,
@@ -246,12 +252,14 @@ var tokenMap = map[string]int{
 	"HIGH_PRIORITY":       highPriority,
 	"HOUR":                hour,
 	"HEX":                 hex,
+	"UNHEX":               unhex,
 	"IDENTIFIED":          identified,
 	"IGNORE":              ignore,
 	"IF":                  ifKwd,
 	"IFNULL":              ifNull,
 	"IN":                  in,
 	"INDEX":               index,
+	"INFILE":              infile,
 	"INNER":               inner,
 	"INSERT":              insert,
 	"INTERVAL":            interval,
@@ -270,6 +278,8 @@ var tokenMap = map[string]int{
 	"LEVEL":               level,
 	"LIKE":                like,
 	"LIMIT":               limit,
+	"LINES":               lines,
+	"LOAD":                load,
 	"LOCAL":               local,
 	"LOCATE":              locate,
 	"LOCK":                lock,
@@ -290,6 +300,7 @@ var tokenMap = map[string]int{
 	"NAMES":               names,
 	"NATIONAL":            national,
 	"NOT":                 not,
+	"NO_WRITE_TO_BINLOG":  noWriteToBinLog,
 	"NULL":                null,
 	"NULLIF":              nullIf,
 	"OFFSET":              offset,
@@ -336,9 +347,11 @@ var tokenMap = map[string]int{
 	"SHOW":                show,
 	"SLEEP":               sleep,
 	"SIGNED":              signed,
+	"SNAPSHOT":            snapshot,
 	"SOME":                some,
 	"SPACE":               space,
 	"START":               start,
+	"STARTING":            starting,
 	"STATS_PERSISTENT":    statsPersistent,
 	"STATUS":              status,
 	"SUBDATE":             subDate,
@@ -350,6 +363,7 @@ var tokenMap = map[string]int{
 	"SYSDATE":             sysDate,
 	"TABLE":               tableKwd,
 	"TABLES":              tables,
+	"TERMINATED":          terminated,
 	"THEN":                then,
 	"TO":                  to,
 	"TRAILING":            trailing,
@@ -380,6 +394,7 @@ var tokenMap = map[string]int{
 	"WEEKOFYEAR":          weekofyear,
 	"WHEN":                when,
 	"WHERE":               where,
+	"WITH":                with,
 	"WRITE":               write,
 	"XOR":                 xor,
 	"YEARWEEK":            yearweek,
@@ -454,4 +469,20 @@ func isTokenIdentifier(s string, buf *bytes.Buffer) int {
 	}
 	tok := tokenMap[hack.String(data)]
 	return tok
+}
+
+func handleIdent(lval *yySymType) int {
+	s := lval.ident
+	// A character string literal may have an optional character set introducer and COLLATE clause:
+	// [_charset_name]'string' [COLLATE collation_name]
+	// See https://dev.mysql.com/doc/refman/5.7/en/charset-literal.html
+	if !strings.HasPrefix(s, "_") {
+		return identifier
+	}
+	cs, _, err := charset.GetCharsetInfo(s[1:])
+	if err != nil {
+		return identifier
+	}
+	lval.item = cs
+	return underscoreCS
 }

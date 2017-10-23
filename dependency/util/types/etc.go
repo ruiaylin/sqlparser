@@ -23,9 +23,9 @@ import (
 
 	"github.com/juju/errors"
 	"github.com/ruiaylin/sqlparser/dependency/mysql"
+	"github.com/ruiaylin/sqlparser/parser/opcode"
 	"github.com/ruiaylin/sqlparser/dependency/terror"
 	"github.com/ruiaylin/sqlparser/dependency/util/charset"
-	"github.com/ruiaylin/sqlparser/parser/opcode"
 )
 
 // IsTypeBlob returns a boolean indicating whether the tp is a blob type.

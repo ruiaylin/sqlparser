@@ -28,9 +28,9 @@ package parser
 import (
 	"strings"
 
-	"github.com/ruiaylin/sqlparser/dependency/mysql"
 	"github.com/ruiaylin/sqlparser/ast"
 	"github.com/ruiaylin/sqlparser/dependency/model"
+	"github.com/ruiaylin/sqlparser/dependency/mysql"
 	"github.com/ruiaylin/sqlparser/parser/opcode"
 	"github.com/ruiaylin/sqlparser/dependency/util/charset"
 	"github.com/ruiaylin/sqlparser/dependency/util/types"
@@ -48,10 +48,14 @@ import (
 	/*yy:token "%c"     */	identifier      "identifier"
 	/*yy:token "\"%c\"" */	stringLit       "string literal"
 
+	with		"WITH"
+
 	/* the following tokens belong to NotKeywordToken*/
 	abs		"ABS"
 	addDate		"ADDDATE"
 	admin		"ADMIN"
+	ceil		"CEIL"
+	ceiling		"CEILING"
 	coalesce	"COALESCE"
 	concat		"CONCAT"
 	concatWs	"CONCAT_WS"
@@ -71,6 +75,7 @@ import (
 	greatest	"GREATEST"
 	hour		"HOUR"
 	hex         	"HEX"
+	unhex         	"UNHEX"
 	ifNull		"IFNULL"
 	isNull		"ISNULL"
 	lastInsertID	"LAST_INSERT_ID"
@@ -135,6 +140,8 @@ import (
 	compressed	"COMPRESSED"
 	compression	"COMPRESSION"
 	connection 	"CONNECTION"
+	consistent	"CONSISTENT"
+	data 		"DATA"
 	dateType	"DATE"
 	datetimeType	"DATETIME"
 	deallocate	"DEALLOCATE"
@@ -151,7 +158,9 @@ import (
 	fields		"FIELDS"
 	first		"FIRST"
 	fixed		"FIXED"
+	flush		"FLUSH"
 	full		"FULL"
+	function	"FUNCTION"
 	grants		"GRANTS"
 	hash		"HASH"
 	identified	"IDENTIFIED"
@@ -162,6 +171,7 @@ import (
 	mode		"MODE"
 	maxRows		"MAX_ROWS"
 	minRows		"MIN_ROWS"
+	noWriteToBinLog "NO_WRITE_TO_BINLOG"
 	names		"NAMES"
 	national	"NATIONAL"
 	no		"NO"
@@ -181,6 +191,7 @@ import (
 	serializable	"SERIALIZABLE"
 	session		"SESSION"
 	signed		"SIGNED"
+	snapshot	"SNAPSHOT"
 	space 		"SPACE"
 	sqlCache	"SQL_CACHE"
 	sqlNoCache	"SQL_NO_CACHE"
@@ -237,7 +248,6 @@ import (
 	create		"CREATE"
 	cross 		"CROSS"
 	curDate 	"CURDATE"
-	utcDate 	"UTC_DATE"
 	currentDate 	"CURRENT_DATE"
 	currentTime 	"CURRENT_TIME"
 	currentUser	"CURRENT_USER"
@@ -255,8 +265,10 @@ import (
 	dual 		"DUAL"
 	duplicate	"DUPLICATE"
 	elseKwd		"ELSE"
+	enclosed	"ENCLOSED"
 	enum 		"ENUM"
 	eq		"="
+	escaped 	"ESCAPED"
 	exists		"EXISTS"
 	explain		"EXPLAIN"
 	extract		"EXTRACT"
@@ -275,6 +287,7 @@ import (
 	ifKwd		"IF"
 	in		"IN"
 	index		"INDEX"
+	infile		"INFILE"
 	inner 		"INNER"
 	insert		"INSERT"
 	interval	"INTERVAL"
@@ -288,6 +301,8 @@ import (
 	left		"LEFT"
 	like		"LIKE"
 	limit		"LIMIT"
+	lines 		"LINES"
+	load		"LOAD"
 	lock		"LOCK"
 	lowPriority	"LOW_PRIORITY"
 	lsh		"<<"
@@ -320,10 +335,12 @@ import (
 	set		"SET"
 	share		"SHARE"
 	show		"SHOW"
+	starting	"STARTING"
 	strcmp		"STRCMP"
 	sysVar		"SYS_VAR"
 	sysDate		"SYSDATE"
 	tableKwd	"TABLE"
+	terminated	"TERMINATED"
 	then		"THEN"
 	to		"TO"
 	trailing	"TRAILING"
@@ -335,8 +352,9 @@ import (
 	unsigned	"UNSIGNED"
 	update		"UPDATE"
 	use		"USE"
-	using		"USING"
 	userVar		"USER_VAR"
+	using		"USING"
+	utcDate 	"UTC_DATE"
 	values		"VALUES"
 	when		"WHEN"
 	where		"WHERE"
@@ -406,7 +424,7 @@ import (
 	BeginTransactionStmt	"BEGIN TRANSACTION statement"
 	BinlogStmt		"Binlog base64 statement"
 	CastType		"Cast function target type"
-	CharsetName		"Charactor set name"
+	CharsetName		"Character set name"
 	ColumnDef		"table column definition"
 	ColumnName		"column name"
 	ColumnNameList		"column name list"
@@ -450,8 +468,10 @@ import (
 	DropIndexStmt		"DROP INDEX statement"
 	DropTableStmt		"DROP TABLE statement"
 	EmptyStmt		"empty statement"
+	Enclosed		"Enclosed by"
 	EqOpt			"= or empty"
 	EscapedTableRef 	"escaped table reference"
+	Escaped			"Escaped by"
 	ExecuteStmt		"Execute statement"
 	ExplainSym		"EXPLAIN or DESCRIBE or DESC"
 	ExplainStmt		"EXPLAIN statement"
@@ -463,9 +483,13 @@ import (
 	Factor			"expression factor"
 	PredicateExpr		"Predicate expression factor"
 	Field			"field expression"
+	Fields			"Fields clause"
+	FieldsTerminated	"Fields terminated by"
 	FieldAsName		"Field alias name"
 	FieldAsNameOpt		"Field alias name opt"
 	FieldList		"field expression list"
+	FieldsOrColumns 	"Fields or columns"
+	FlushStmt		"Flush statement"
 	TableRefsClause		"Table references clause"
 	Function		"function expr"
 	FunctionCallAgg		"Function call on aggregate data"
@@ -503,7 +527,11 @@ import (
 	KeyOrIndex		"{KEY|INDEX}"
 	LikeEscapeOpt 		"like escape option"
 	LimitClause		"LIMIT clause"
+	Lines			"Lines clause"
+	LinesTerminated		"Lines terminated by"
 	Literal			"literal value"
+	LoadDataStmt		"Load data statement"
+	LocalOpt		"Local opt"
 	LockTablesStmt		"Lock tables statement"
 	LockType		"Table locks type"
 	logAnd			"logical and operator"
@@ -513,6 +541,7 @@ import (
 	NotOpt			"optional NOT"
 	NowSym			"CURRENT_TIMESTAMP/LOCALTIME/LOCALTIMESTAMP/NOW"
 	NumLiteral		"Num/Int/Float/Decimal Literal"
+	NoWriteToBinLogAliasOpt "NO_WRITE_TO_BINLOG alias LOCAL or empty"
 	ObjectType		"Grant statement object type"
 	OnDuplicateKeyUpdate	"ON DUPLICATE KEY UPDATE value list"
 	Operand			"operand"
@@ -563,6 +592,7 @@ import (
 	ShowTableAliasOpt       "Show table alias option"
 	ShowLikeOrWhereOpt	"Show like or where clause option"
 	SignedLiteral		"Literal or NumLiteral with sign"
+	Starting		"Starting by"
 	Statement		"statement"
 	StatementList		"statement list"
 	StatsPersistentVal	"stats_persistent value"
@@ -581,6 +611,7 @@ import (
 	TableLockList		"Table lock list"
 	TableName		"Table name"
 	TableNameList		"Table name list"
+	TableNameListOpt	"Table name list opt"
 	TableOption		"create table option"
 	TableOptionList		"create table option list"
 	TableOptionListOpt	"create table option list opt"
@@ -611,6 +642,7 @@ import (
 	WhereClauseOptional	"Optinal WHERE clause"
 	WhenClause		"When clause"
 	WhenClauseList		"When clause list"
+	WithReadLockOpt		"With Read Lock opt"
 	ElseOpt			"Optional else clause"
 	ExpressionOpt		"Optional expression"
 	Type			"Types"
@@ -858,6 +890,10 @@ BeginTransactionStmt:
 		$$ = &ast.BeginStmt{}
 	}
 |	"START" "TRANSACTION"
+	{
+		$$ = &ast.BeginStmt{}
+	}
+|	"START" "TRANSACTION" "WITH" "CONSISTENT" "SNAPSHOT"
 	{
 		$$ = &ast.BeginStmt{}
 	}
@@ -1923,16 +1959,25 @@ Identifier:
 identifier | UnReservedKeyword | NotKeywordToken
 
 UnReservedKeyword:
- "ACTION" | "ASCII" | "AUTO_INCREMENT" | "AFTER" | "AVG" | "BEGIN" | "BIT" | "BOOL" | "BOOLEAN" | "BTREE" | "CHARSET" | "COLUMNS" | "COMMIT" | "COMPACT" | "COMPRESSED" | "DATE" | "DATETIME" | "DEALLOCATE" | "DO" | "DYNAMIC" | "END" | "ENGINE" | "ENGINES" | "ESCAPE" | "EXECUTE" | "FIELDS" | "FIRST" | "FIXED" | "FULL" | "HASH" | "LOCAL" | "NAMES" | "OFFSET" | "PASSWORD" %prec lowerThanEq | "PREPARE" | "QUICK" | "REDUNDANT" | "ROLLBACK" | "SESSION" | "SIGNED" | "START" | "STATUS" | "GLOBAL" | "TABLES" | "TEXT" | "TIME" | "TIMESTAMP" | "TRANSACTION" | "TRUNCATE" | "UNKNOWN" | "VALUE" | "WARNINGS" | "YEAR" | "MODE"  | "WEEK"  | "ANY" | "SOME" | "USER" | "IDENTIFIED" | "COLLATION" | "COMMENT" | "AVG_ROW_LENGTH" | "CONNECTION" | "CHECKSUM" | "COMPRESSION" | "KEY_BLOCK_SIZE" | "MAX_ROWS" | "MIN_ROWS" | "NATIONAL" | "ROW" | "ROW_FORMAT" | "QUARTER" | "GRANTS" | "TRIGGERS" | "DELAY_KEY_WRITE" | "ISOLATION" | "REPEATABLE" | "COMMITTED" | "UNCOMMITTED" | "ONLY" | "SERIALIZABLE" | "LEVEL" | "VARIABLES" | "SQL_CACHE" | "SQL_NO_CACHE" | "DISABLE"  | "ENABLE" | "REVERSE" | "SPACE" | "PRIVILEGES" | "NO" | "BINLOG"
+ "ACTION" | "ASCII" | "AUTO_INCREMENT" | "AFTER" | "AVG" | "BEGIN" | "BIT" | "BOOL" | "BOOLEAN" | "BTREE" | "CHARSET"
+|	"COLUMNS" | "COMMIT" | "COMPACT" | "COMPRESSED" | "CONSISTENT" | "DATA" | "DATE" | "DATETIME" | "DEALLOCATE" | "DO"
+|	"DYNAMIC"| "END" | "ENGINE" | "ENGINES" | "ESCAPE" | "EXECUTE" | "FIELDS" | "FIRST" | "FIXED" | "FULL" |"GLOBAL"
+|	"HASH" | "LOCAL" | "NAMES" | "OFFSET" | "PASSWORD" %prec lowerThanEq | "PREPARE" | "QUICK" | "REDUNDANT" | "ROLLBACK"
+|	"SESSION" | "SIGNED" | "SNAPSHOT" | "START" | "STATUS" | "TABLES" | "TEXT" | "TIME" | "TIMESTAMP" | "TRANSACTION"
+|	"TRUNCATE" | "UNKNOWN" | "VALUE" | "WARNINGS" | "YEAR" | "MODE"  | "WEEK"  | "ANY" | "SOME" | "USER" | "IDENTIFIED"
+|	"COLLATION" | "COMMENT" | "AVG_ROW_LENGTH" | "CONNECTION" | "CHECKSUM" | "COMPRESSION" | "KEY_BLOCK_SIZE" | "MAX_ROWS"
+|	"MIN_ROWS" | "NATIONAL" | "ROW" | "ROW_FORMAT" | "QUARTER" | "GRANTS" | "TRIGGERS" | "DELAY_KEY_WRITE" | "ISOLATION"
+|	"REPEATABLE" | "COMMITTED" | "UNCOMMITTED" | "ONLY" | "SERIALIZABLE" | "LEVEL" | "VARIABLES" | "SQL_CACHE"
+|	"SQL_NO_CACHE" | "DISABLE"  | "ENABLE" | "REVERSE" | "SPACE" | "PRIVILEGES" | "NO" | "BINLOG" | "FUNCTION"
 
 NotKeywordToken:
 	"ABS" | "ADDDATE" | "ADMIN" | "COALESCE" | "CONCAT" | "CONCAT_WS" | "CONNECTION_ID" | "CUR_TIME"| "COUNT" | "DAY"
 |	"DATE_ADD" | "DATE_FORMAT" | "DATE_SUB" | "DAYNAME" | "DAYOFMONTH" | "DAYOFWEEK" | "DAYOFYEAR" | "FOUND_ROWS"
-|	"GROUP_CONCAT"| "GREATEST" | "HOUR" | "HEX" | "IFNULL" | "ISNULL" | "LAST_INSERT_ID" | "LCASE" | "LENGTH" | "LOCATE" | "LOWER" | "LTRIM"
+|	"GROUP_CONCAT"| "GREATEST" | "HOUR" | "HEX" | "UNHEX" | "IFNULL" | "ISNULL" | "LAST_INSERT_ID" | "LCASE" | "LENGTH" | "LOCATE" | "LOWER" | "LTRIM"
 |	"MAX" | "MICROSECOND" | "MIN" |	"MINUTE" | "NULLIF" | "MONTH" | "MONTHNAME" | "NOW" | "POW" | "POWER" | "RAND"
 |	"SECOND" | "SLEEP" | "SQL_CALC_FOUND_ROWS" | "SUBDATE" | "SUBSTRING" %prec lowerThanLeftParen | "SUBSTRING_INDEX"
 |	"SUM" | "TRIM" | "RTRIM" | "UCASE" | "UPPER" | "VERSION" | "WEEKDAY" | "WEEKOFYEAR" | "YEARWEEK" | "ROUND"
-|	"STATS_PERSISTENT" | "GET_LOCK" | "RELEASE_LOCK"
+|	"STATS_PERSISTENT" | "GET_LOCK" | "RELEASE_LOCK" | "CEIL" | "CEILING"
 
 /************************************************************************************
  *
@@ -1945,6 +1990,7 @@ InsertIntoStmt:
 	{
 		x := $6.(*ast.InsertStmt)
 		x.Priority = $2.(int)
+		x.Ignore = $3.(bool)
 		// Wraps many layers here so that it can be processed the same way as select statement.
 		ts := &ast.TableSource{Source: $5.(*ast.TableName)}
 		x.Table = &ast.TableRefsClause{TableRefs: &ast.Join{Left: ts}}
@@ -2430,9 +2476,17 @@ FunctionCallNonKeyword:
 	{
 		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: $3.([]ast.ExprNode)}
 	}
+|	"CEIL" '(' Expression ')'
+	{
+		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
+	}
+|	"CEILING" '(' Expression ')'
+	{
+		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
+	}
 |	"DAY" '(' Expression ')'
 	{
-		$$ =  &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
+		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
 	}
 |	"DAYNAME" '(' Expression ')'
 	{
@@ -2513,6 +2567,10 @@ FunctionCallNonKeyword:
 		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
 	}
 |	"HEX" '(' Expression ')'
+	{
+		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
+	}
+|	"UNHEX" '(' Expression ')'
 	{
 		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: []ast.ExprNode{$3.(ast.ExprNode)}}
 	}
@@ -4005,6 +4063,16 @@ ShowTargetFilterable:
 			Tp: ast.ShowProcedureStatus,
 		}
 	}
+|	"FUNCTION" "STATUS"
+	{
+		// This statement is similar to SHOW PROCEDURE STATUS but for stored functions.
+		// See http://dev.mysql.com/doc/refman/5.7/en/show-function-status.html
+		// We do not support neither stored functions nor stored procedures.
+		// So we reuse show procedure status process logic.
+		$$ = &ast.ShowStmt {
+			Tp: ast.ShowProcedureStatus,
+		}
+	}
 
 ShowLikeOrWhereOpt:
 	{
@@ -4067,6 +4135,47 @@ ShowTableAliasOpt:
 		$$ = $2.(*ast.TableName)
 	}
 
+FlushStmt:
+	"FLUSH" NoWriteToBinLogAliasOpt TableOrTables TableNameListOpt WithReadLockOpt
+	{
+		$$ = &ast.FlushTableStmt{
+			Tables: $4.([]*ast.TableName),
+			NoWriteToBinLog: $2.(bool),
+			ReadLock: $5.(bool),
+		}
+	}
+
+NoWriteToBinLogAliasOpt:
+	{
+		$$ = false
+	}
+|	"NO_WRITE_TO_BINLOG"
+	{
+		$$ = true
+	}
+|	"LOCAL"
+	{
+		$$ = true
+	}
+
+TableNameListOpt:
+	{
+		$$ = []*ast.TableName{}
+	}
+|	TableNameList
+	{
+		$$ = $1
+	}
+
+WithReadLockOpt:
+	{
+		$$ = false
+	}
+|	"WITH" "READ" "LOCK"
+	{
+		$$ = true
+	}
+
 Statement:
 	EmptyStmt
 |	AdminStmt
@@ -4087,8 +4196,10 @@ Statement:
 |	DropDatabaseStmt
 |	DropIndexStmt
 |	DropTableStmt
+|	FlushStmt
 |	GrantStmt
 |	InsertIntoStmt
+|	LoadDataStmt
 |	PreparedStmt
 |	RollbackStmt
 |	ReplaceIntoStmt
@@ -5019,6 +5130,126 @@ PrivLevel:
 			TableName: $1,
 		}
 	}
+
+/**************************************LoadDataStmt*****************************************
+ * See https://dev.mysql.com/doc/refman/5.7/en/load-data.html
+ *******************************************************************************************/
+LoadDataStmt:
+	"LOAD" "DATA" LocalOpt "INFILE" stringLit "INTO" "TABLE" TableName Fields Lines
+	{
+		x := &ast.LoadDataStmt{
+			Path:       $5,
+			Table:      $8.(*ast.TableName),
+		}
+		if $3 != nil {
+			x.IsLocal = true
+		}
+		if $9 != nil {
+			x.FieldsInfo = $9.(*ast.FieldsClause)
+		}
+		if $10 != nil {
+			x.LinesInfo = $10.(*ast.LinesClause)
+		}
+		$$ = x
+	}
+
+LocalOpt:
+	{
+		$$ = nil 
+	}
+|	"LOCAL"
+	{
+		$$ = $1
+	}
+
+Fields:
+     	{
+		escape := "\\"
+		$$ = &ast.FieldsClause{
+			Terminated: "\t",
+			Escaped:    escape[0],
+		}
+	}
+|	FieldsOrColumns FieldsTerminated Enclosed Escaped
+	{
+		escape := $4.(string)
+		if escape != "\\" && len(escape) > 1 {
+			yylex.Errorf("Incorrect arguments %s to ESCAPE", escape)
+			return 1
+		}
+		var enclosed byte
+		str := $3.(string)
+		if len(str) > 1 {
+			yylex.Errorf("Incorrect arguments %s to ENCLOSED", escape)
+			return 1
+		}else if len(str) != 0 {
+			enclosed = str[0]
+		}
+		$$ = &ast.FieldsClause{
+			Terminated: $2.(string),
+			Enclosed:   enclosed,
+			Escaped:    escape[0],
+		}
+	}
+
+FieldsOrColumns:
+	"FIELDS"{}
+|	"COLUMNS"{}
+
+FieldsTerminated:
+	{
+		$$ = "\t"
+	}
+|	"TERMINATED" "BY" stringLit
+	{
+		$$ = $3
+	}
+
+Enclosed:
+	{
+		$$ = ""
+	}
+|	"ENCLOSED" "BY" stringLit
+	{
+		$$ = $3
+	}
+
+Escaped:
+	{
+		$$ = "\\"
+	}
+|	"ESCAPED" "BY" stringLit
+	{
+		$$ = $3
+	}
+
+Lines:
+	{
+		$$ = &ast.LinesClause{Terminated: "\n"}
+	}
+|	"LINES" Starting LinesTerminated
+	{
+		$$ = &ast.LinesClause{Starting: $2.(string), Terminated: $3.(string)}
+	}
+
+Starting:
+	{
+		$$ = ""
+	}
+|	"STARTING" "BY" stringLit
+	{
+		$$ = $3
+	}
+
+LinesTerminated:
+	{
+		$$ = "\n"
+	}
+|	"TERMINATED" "BY" stringLit
+	{
+		$$ = $3
+	}
+
 
 /*********************************************************************
  * Lock/Unlock Tables
