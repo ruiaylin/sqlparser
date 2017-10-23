@@ -22,8 +22,8 @@ and use parser as the package name inside the code.
 
 ### Do the test by the following command
 
-        ➜  parser git:(master) go test parser_test.go 
-        ok  	command-line-arguments	0.044s
+    ➜  parser git:(master) cd test ; go test parser_test.go 
+    ok  	command-line-arguments	0.044s
 
 
 
