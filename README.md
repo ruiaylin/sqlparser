@@ -26,8 +26,8 @@ and use parser as the package name inside the code.
         ok  	command-line-arguments	0.044s
 
 
-Hope you guys Enjoy this parser ^_^ 
+Hope you guys enjoy this parser ^_^ 
 ===================================
 
-### Licence from TiDB
+### The Licence port from TiDB
 
