@@ -1,4 +1,4 @@
-The most full-featured MySQL's SQL Parser implement in golang at present. 
+The most full-featured MySQL's SQL parser implement in golang at present. 
 ===============================================
 
 ### This parser is part of TiDB from PingCap
@@ -26,8 +26,10 @@ and use parser as the package name inside the code.
         ok  	command-line-arguments	0.044s
 
 
-Hope you guys enjoy this parser ^_^ 
-===================================
 
 ### The Licence port from TiDB
+
+Hope you guys enjoy this parser 
+===================================
+
 
