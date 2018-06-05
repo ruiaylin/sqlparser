@@ -399,6 +399,7 @@ type CreateTableStmt struct {
 	Cols        []*ColumnDef
 	Constraints []*Constraint
 	Options     []*TableOption
+	Like        *TableName
 }
 
 // Accept implements Node Accept interface.
