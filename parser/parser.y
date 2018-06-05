@@ -1392,6 +1392,22 @@ CreateTableStmt:
 			Options:        $8.([]*ast.TableOption),
 		}
 	}
+|	"CREATE" "TABLE" IfNotExists TableName '(' "LIKE" TableName ')'
+	{
+		$$ = &ast.CreateTableStmt{
+			Table:          $4.(*ast.TableName),
+			IfNotExists:    $3.(bool),
+			Like:           $7.(*ast.TableName),
+		}
+	}
+|	"CREATE" "TABLE" IfNotExists TableName "LIKE" TableName
+	{
+		$$ = &ast.CreateTableStmt{
+			Table:          $4.(*ast.TableName),
+			IfNotExists:    $3.(bool),
+			Like:           $6.(*ast.TableName),
+		}
+	}
 
 Default:
 	"DEFAULT" Expression
@@ -2932,11 +2948,11 @@ TimeUnit:
 	{
 		$$ = $1
 	}
-| "QUARTER" 
+| "QUARTER"
 	{
 		$$ = $1
 	}
-| "YEAR" 
+| "YEAR"
 	{
 		$$ = $1
 	}
@@ -3224,7 +3240,7 @@ DeallocateStmt:
 	}
 
 DeallocateSym:
-	"DEALLOCATE" 
+	"DEALLOCATE"
 	{
 		$$ = $1
 	}
@@ -5155,7 +5171,7 @@ LoadDataStmt:
 
 LocalOpt:
 	{
-		$$ = nil 
+		$$ = nil
 	}
 |	"LOCAL"
 	{

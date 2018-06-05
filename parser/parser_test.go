@@ -768,6 +768,11 @@ func (s *testParserSuite) TestDDL(c *C) {
 		// For check clause
 		{"create table t (c1 bool, c2 bool, check (c1 in (0, 1)), check (c2 in (0, 1)))", true},
 		{"CREATE TABLE Customer (SD integer CHECK (SD > 0), First_Name varchar(30));", true},
+		// for like clause
+		{"CREATE TABLE t LIKE y;", true},
+		{"CREATE TABLE t (LIKE y);", true},
+		{"create table t like y;", true},
+		{"create table t (like y);", true},
 
 		{"create database xxx", true},
 		{"create database if exists xxx", false},
